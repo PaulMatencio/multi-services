@@ -1,5 +1,5 @@
 {
-  "name": "multiServices",
+  "name": "multi-services",
   "authors": [
     "Paul Matencio"
   ],
@@ -16,7 +16,8 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "working-abroad-page": "PaulMatencio/working-abroad",
-    "paper-slider": "^2.0.2"
+    "paper-slider": "^2.0.2",
+    "vaadin-combo-box": "vaadin/vaadin-combo-box#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"

@@ -89,7 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-drawer-layout fullbleed narrow="{{narrow}}" responsive-width="1260px">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]" on-opened-changed="_openedChanged">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="view1" href="[[rootPath]]view1">Working Abroad</a>
@@ -147,9 +147,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
+      _openedChanged(e) {
+        /*
+        *  to prevent  paper-dialog element to be overlaid by the
+        *  app-drawer element when it is opened
+        *  => shift  the paper-dialog (scrolling)  to the right using
+        *  class (size-position)
+        */
+        this.set("_drawerOpened",e.detail.value);
+        let myView1SR = this.shadowRoot.querySelector("my-view1").shadowRoot ;
+        let working = myView1SR ? myView1SR.querySelector("x-working-abroad") : null ;
+        let scrolling = working ? working.shadowRoot.querySelector("#scrolling") : null ;
+        if (scrolling ) {
+            if (this._drawerOpened) scrolling.classList.add("size-position");
+            else scrolling.classList.remove("size-position");
+        }
+      }
+
+
+
+
       _routePageChanged(page) {
-        // If no page was found in the route data, page will be an empty string.
-        // Deault to 'view1' in that case.
+        /* If no page was found in the route data, page will be an empty string.
+        * Deault to 'view1' in that case.
+        */
         this.page = page || 'view1';
 
         // Close a non-persistent drawer when the page & route are changed.
@@ -172,6 +193,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'view404';
       }
     }
+
+    function getElementId(root,elem1,elem2,id) {
+      let myView1SR = root.shadowRoot.querySelector(elem1).shadowRoot || {};
+      let working = myView1SR ? myView1.querySelector(elem2) : {} ;
+      let scrolling = working ? working.shadowRoot.querySelector(id) : {};
+      return scrolling;
+    }
+
 
     window.customElements.define(MyApp.is, MyApp);
   </script>
