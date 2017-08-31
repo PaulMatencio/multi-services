@@ -18,8 +18,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/working-abroad/demo/paper-icon-button-custom-styles.html">
 <link rel="import" href="my-icons.html">
 <link rel="lazy-import" href="my-view1.html">
 <link rel="lazy-import" href="my-view2.html">
@@ -28,13 +33,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="my-app">
   <template>
+    <custom-style>
+      <style include="paper-icon-button-custom-styles"></style>
+    </custom-style>
     <style>
       :host {
         --app-primary-color: white;
         --app-secondary-color: black;
-        --app-toolbar-font-size: 24px;
         --app-drawer-width: 256px;
-        --app-toolbar-font-size: 24px;
+        --app-toolbar-font-size: 18px;
+        --paper-item-icon-width: 32px;
+        --paper-item-min-height: 40px;
+        --paper-item {
+            padding: 0;
+            font-size: 56px;
+          }
         --app-tool-bar {
               font-family: 'Roboto', Helvetica, sans-serif;
               color: white;
@@ -42,6 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               font-size: var(--app-toolbar-font-size, 36px);
         }
         display: block;
+
       }
 
       app-toolbar {
@@ -67,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .drawer-list a {
-        display: block;
+        display: flex;
         padding: 0 16px;
         text-decoration: none;
         color: var(--app-secondary-color);
@@ -78,6 +92,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+
+       h2 {
+        font-weight: 300;
+        font-size: 32px;
+        margin: 0
+      }
+
+      /*paper-input input style */
+      input {
+        font: inherit;
+        outline: none;
+        box-shadow: none;
+        border: none;
+        width: auto;
+        font-size: 18px;
+        text-align: left;
+      }
+
+    .paper-item-section {
+      --paper-item-min-height: 40px;
+
+    }
+
+    paper-icon-item {
+      display: var(--layout-horizontal_-_display-start-justified);
+      padding-left: 0;
+    }
+
+    paper-icon-item > span {
+      margin-right: 0;
+    }
+
+    iron-icon {
+      margin-right: 20px;
+    }
+
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
@@ -89,12 +139,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-drawer-layout fullbleed narrow="{{narrow}}" responsive-width="1260px">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]" on-opened-changed="_openedChanged">
-        <app-toolbar>Menu</app-toolbar>
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]" on-opened-changed="_openedChanged" align="start">
+        <app-toolbar><h2>Multi Services</h2></app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="[[rootPath]]view1">Working Abroad</a>
-          <a name="view2" href="[[rootPath]]view2">View Two</a>
-          <a name="view3" href="[[rootPath]]view3">View Three</a>
+          <div class="paper-item-section">
+            <a name="view1" href="[[rootPath]]view1">
+              <paper-icon-item role="option" table-index="0" aria-diable-"false">
+                <iron-icon icon="home" item-icon></iron-icon><span>Working abroad</span>
+              </paper-icon-item>
+            </a>
+            <a name="view2" href="[[rootPath]]view2">
+              <paper-icon-item role="option" table-index="0" aria-diable-"false">
+                <iron-icon icon="home" item-icon></iron-icon><span>View Two</span>
+              </paper-icon-item>
+            </a>
+          </div>
+
+          <a name="view3" href="[[rootPath]]view3">
+            <paper-icon-item role="option" table-index="0" aria-diable-"false">
+              <iron-icon icon="home" item-icon></iron-icon><span>View three</span>
+            </paper-icon-item>
+          </a>
+
         </iron-selector>
       </app-drawer>
 
@@ -103,8 +169,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Multi Services</div>
+              <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+              <div main-title><h2></h2></div>
+              <paper-input-container>
+                <iron-input slot="input"  bind-value="{{search}}">
+                  <input type="text" placeholder="Search services" size="25" value="{{search::input}}">
+                </iron-input>
+                <paper-icon-button slot="suffix" class="big" icon="search" on-tap="_search"></paper-icon-button>
+              </paper-input-container>
+
           </app-toolbar>
         </app-header>
 
@@ -138,6 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          search : String
         };
       }
 
@@ -164,8 +238,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      _search() {
 
-
+      }
 
       _routePageChanged(page) {
         /* If no page was found in the route data, page will be an empty string.
